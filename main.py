@@ -42,9 +42,9 @@ class MapPy:
             value = self.values[area['name']]
             i = (((float(value) - self.scaleMin)) / (self.scaleMax - self.scaleMin)) * self.max
             self.steps[area['name']] = i
-        self.title = "Youth Crime By Region of England"
-        self.subTitle = "Data From Year\nEnding March 2016"
-        self.scaleSubText = "Youths Cautioned Or Sentenced\nPer 10,000 People"
+        self.title = input("Title: ")
+        self.subTitle = input("Subtitle: ")
+        self.scaleSubText = input("Scale Caption: ")
         self.process()
         self.drawScale()
         self.drawTitle()
