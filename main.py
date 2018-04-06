@@ -28,20 +28,26 @@ class MapPy:
         self.scaleMin = 4
         self.scaleMax = 9
 
+        self.fnt = ImageFont.truetype('font.ttf', 18)
+
     def run(self):
         self.values = {}
         for x in self.data:
             name = x['name']
             value = input("Value for " + name + ": ")
-            #value = random.uniform(self.scaleMin,self.scaleMax)
+          #  value = random.uniform(self.scaleMin,self.scaleMax)
             self.values[name] = value
         self.steps = {}
         for area in self.data:
             value = self.values[area['name']]
             i = (((float(value) - self.scaleMin)) / (self.scaleMax - self.scaleMin)) * self.max
             self.steps[area['name']] = i
+        self.title = "Youth Crime By Region of England"
+        self.subTitle = "Data From Year\nEnding March 2016"
+        self.scaleSubText = "Youths Cautioned Or Sentenced\nPer 10,000 People"
         self.process()
         self.drawScale()
+        self.drawTitle()
         self.im.show()
 
     def process(self):
@@ -72,13 +78,29 @@ class MapPy:
         img = img.resize((int(scaleWidth - ((scaleWidth * 0.1) * 2)), int((scaleHeight / 10))), Image.ANTIALIAS)
         iW, iH = img.size
         scaleX = int(scaleWidth / 2 - iW / 2)
-        scaleY = int(scaleHeight * 0.1)
+        scaleY = int(scaleHeight * 0.15)
         scaleArea.paste(img, (scaleX, scaleY))
         d = ImageDraw.Draw(scaleArea)
-        fnt = ImageFont.truetype('font.ttf', 18)
-        d.text((scaleX -(scaleX/4),scaleY + iH),str(self.scaleMin),font=fnt,fill=(255,0,0,255))
-        d.text((scaleX + iW, scaleY + 5), str(self.scaleMax), font=fnt, fill=(255, 0, 0, 255))
+
+        d.text((scaleX -(scaleX/4),scaleY + iH), str(self.scaleMin), font=self.fnt, fill=(255, 0, 0, 255))
+        d.text((scaleX + iW, scaleY + 5), str(self.scaleMax), font=self.fnt, fill=(255, 0, 0, 255))
+
+        textWS, textHS = d.textsize(self.scaleSubText, font=self.fnt)
+        d.multiline_text((scaleWidth/2 - textWS/2,iH * 3 + scaleY), self.scaleSubText, font=self.fnt, fill=(0, 0, 0, 255),
+                         align="center")
         self.im.paste(scaleArea, (self.width - scaleWidth, self.height - scaleHeight))
+
+    def drawTitle(self):
+        titleWidth = int(self.width * 0.4)
+        titleHeight = int(titleWidth * 0.3)
+        titleArea = Image.new("RGB", (titleWidth, titleHeight), (140, 140, 140))
+        d = ImageDraw.Draw(titleArea)
+        textW, textH = d.textsize(self.title, font=self.fnt)
+        d.text((titleWidth/2 - textW/2,5),self.title,font=self.fnt,fill=(0,0,0,255))
+        d.line([titleWidth/2 - textW/2,5 + textH,(titleWidth/2 - textW/2) + textW,5 + textH], fill = (0,0,0,255),width = 4)
+        textWS, textHS = d.textsize(self.subTitle, font=self.fnt)
+        d.multiline_text((titleWidth / 2 - textWS / 2, textH + 10), self.subTitle, font=self.fnt, fill=(0, 0, 0, 255),align="center")
+        self.im.paste(titleArea, (self.width - titleWidth,0))
 
     def interpolate(self, startValue, endValue, stepNumber, lastStepNumber):
         return (endValue - startValue) * stepNumber / lastStepNumber + startValue
