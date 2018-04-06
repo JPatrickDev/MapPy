@@ -1,28 +1,23 @@
 [
   {
     "name": "London",
-    "color": "FF7F7F",
-    "population" : 8173941
+    "color": "FF7F7F"
   },
   {
     "name": "North East",
-    "color": "0026FF",
-    "population" : 2596886
+    "color": "0026FF"
   },
   {
     "name": "North West",
-    "color": "FF0000",
-    "population" : 7052177
+    "color": "FF0000"
   },
   {
     "name": "Yorkshire",
-    "color": "00FF21",
-    "population" : 5283733
+    "color": "00FF21"
   },
   {
     "name": "East Midlands",
-    "color": "FFD800",
-    "population" : 4533222
+    "color": "FFD800"
   },
   {
     "name": "West Midlands",
