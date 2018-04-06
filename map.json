@@ -1,0 +1,43 @@
+[
+  {
+    "name": "London",
+    "color": "FF7F7F",
+    "population" : 8173941
+  },
+  {
+    "name": "North East",
+    "color": "0026FF",
+    "population" : 2596886
+  },
+  {
+    "name": "North West",
+    "color": "FF0000",
+    "population" : 7052177
+  },
+  {
+    "name": "Yorkshire",
+    "color": "00FF21",
+    "population" : 5283733
+  },
+  {
+    "name": "East Midlands",
+    "color": "FFD800",
+    "population" : 4533222
+  },
+  {
+    "name": "West Midlands",
+    "color": "FF006E"
+  },
+  {
+    "name": "South West",
+    "color": "7F3300"
+  },
+  {
+    "name": "East Of England",
+    "color": "00FFFF"
+  },
+  {
+    "name": "South East",
+    "color": "267F00"
+  }
+]
