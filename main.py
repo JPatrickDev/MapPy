@@ -1,4 +1,7 @@
-import json,random
+import json, random
+import time, threading
+from queue import Queue
+
 from PIL import Image, ImageDraw
 from PIL import ImageFont
 
@@ -34,8 +37,8 @@ class MapPy:
         self.values = {}
         for x in self.data:
             name = x['name']
-            value = input("Value for " + name + ": ")
-          #  value = random.uniform(self.scaleMin,self.scaleMax)
+            # value = input("Value for " + name + ": ")
+            value = random.uniform(self.scaleMin, self.scaleMax)
             self.values[name] = value
         self.steps = {}
         for area in self.data:
@@ -45,13 +48,47 @@ class MapPy:
         self.title = input("Title: ")
         self.subTitle = input("Subtitle: ")
         self.scaleSubText = input("Scale Caption: ")
-        self.process()
-        self.drawScale()
-        self.drawTitle()
+
+        millis = int(round(time.time() * 1000))
+
+        queue = Queue()
+
+        t1 = threading.Thread(target=self.process, args=())
+        t2 = threading.Thread(target=self.drawScale, args=(queue,))
+        t3 = threading.Thread(target=self.drawTitle, args=(queue,))
+        t1.start()
+        t2.start()
+        t3.start()
+        #        self.process()
+        t1.join()
+        t2.join()
+        t3.join()
+        imgOne = queue.get()
+        imgTwo = queue.get()
+        if(imgOne['key'] == "scale"):
+            scaleArea = imgOne['img']
+            titleArea = imgTwo['img']
+            scaleWidth = int(self.width * 0.4)
+            scaleHeight = int(scaleWidth * 0.3)
+            self.im.paste(scaleArea, (self.width - scaleWidth, self.height - scaleHeight))
+            titleWidth = int(self.width * 0.4)
+            titleHeight = int(titleWidth * 0.3)
+            self.im.paste(titleArea, (self.width - titleWidth, 0))
+        else:
+            scaleArea = imgTwo['img']
+            titleArea = imgOne['img']
+            scaleWidth = int(self.width * 0.4)
+            scaleHeight = int(scaleWidth * 0.3)
+            self.im.paste(scaleArea, (self.width - scaleWidth, self.height - scaleHeight))
+            titleWidth = int(self.width * 0.4)
+            titleHeight = int(titleWidth * 0.3)
+            self.im.paste(titleArea, (self.width - titleWidth, 0))
+        millisEmd = int(round(time.time() * 1000))
+        print(str(millisEmd - millis))
         self.im.show()
 
     def process(self):
-
+        millis = int(round(time.time() * 1000))
         for x in range(0, self.width):
             for y in range(0, self.height):
                 r, g, b = self.rgb.getpixel((x, y))
@@ -63,8 +100,11 @@ class MapPy:
                         b = int(self.interpolate(self.startBlue, self.endBlue, self.steps[area['name']], self.max))
                         self.imgData[x, y] = (r, g, b)
                         break
+        millisEmd = int(round(time.time() * 1000))
+        print("Process"  + str(millisEmd - millis))
 
-    def drawScale(self):
+    def drawScale(self, queue):
+        millis = int(round(time.time() * 1000))
         scaleWidth = int(self.width * 0.4)
         scaleHeight = int(scaleWidth * 0.3)
         scaleArea = Image.new("RGB", (scaleWidth, scaleHeight), (140, 140, 140))
@@ -82,25 +122,35 @@ class MapPy:
         scaleArea.paste(img, (scaleX, scaleY))
         d = ImageDraw.Draw(scaleArea)
 
-        d.text((scaleX -(scaleX/4),scaleY + iH), str(self.scaleMin), font=self.fnt, fill=(255, 0, 0, 255))
+        d.text((scaleX - (scaleX / 4), scaleY + iH), str(self.scaleMin), font=self.fnt, fill=(255, 0, 0, 255))
         d.text((scaleX + iW, scaleY + 5), str(self.scaleMax), font=self.fnt, fill=(255, 0, 0, 255))
 
         textWS, textHS = d.textsize(self.scaleSubText, font=self.fnt)
-        d.multiline_text((scaleWidth/2 - textWS/2,iH * 3 + scaleY), self.scaleSubText, font=self.fnt, fill=(0, 0, 0, 255),
+        d.multiline_text((scaleWidth / 2 - textWS / 2, iH * 3 + scaleY), self.scaleSubText, font=self.fnt,
+                         fill=(0, 0, 0, 255),
                          align="center")
-        self.im.paste(scaleArea, (self.width - scaleWidth, self.height - scaleHeight))
+        queue.put({"key": "scale","img" : scaleArea})
+        #  self.im.paste(scaleArea, (self.width - scaleWidth, self.height - scaleHeight))
+        millisEmd = int(round(time.time() * 1000))
+        print("Scale" + str(millisEmd - millis))
 
-    def drawTitle(self):
+    def drawTitle(self, queue):
+        millis = int(round(time.time() * 1000))
         titleWidth = int(self.width * 0.4)
         titleHeight = int(titleWidth * 0.3)
         titleArea = Image.new("RGB", (titleWidth, titleHeight), (140, 140, 140))
         d = ImageDraw.Draw(titleArea)
         textW, textH = d.textsize(self.title, font=self.fnt)
-        d.text((titleWidth/2 - textW/2,5),self.title,font=self.fnt,fill=(0,0,0,255))
-        d.line([titleWidth/2 - textW/2,5 + textH,(titleWidth/2 - textW/2) + textW,5 + textH], fill = (0,0,0,255),width = 4)
+        d.text((titleWidth / 2 - textW / 2, 5), self.title, font=self.fnt, fill=(0, 0, 0, 255))
+        d.line([titleWidth / 2 - textW / 2, 5 + textH, (titleWidth / 2 - textW / 2) + textW, 5 + textH],
+               fill=(0, 0, 0, 255), width=4)
         textWS, textHS = d.textsize(self.subTitle, font=self.fnt)
-        d.multiline_text((titleWidth / 2 - textWS / 2, textH + 10), self.subTitle, font=self.fnt, fill=(0, 0, 0, 255),align="center")
-        self.im.paste(titleArea, (self.width - titleWidth,0))
+        d.multiline_text((titleWidth / 2 - textWS / 2, textH + 10), self.subTitle, font=self.fnt, fill=(0, 0, 0, 255),
+                         align="center")
+        queue.put({"key": "title","img" : titleArea})
+        # self.im.paste(titleArea, (self.width - titleWidth,0))
+        millisEmd = int(round(time.time() * 1000))
+        print("Title" + str(millisEmd - millis))
 
     def interpolate(self, startValue, endValue, stepNumber, lastStepNumber):
         return (endValue - startValue) * stepNumber / lastStepNumber + startValue
