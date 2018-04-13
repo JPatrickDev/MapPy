@@ -1,0 +1,8 @@
+{
+  "startColor" : "255,0,0",
+  "endColor" : "0,0,0",
+  "max" : 50,
+  "scaleMin" : 4,
+  "scaleMax" : 9,
+  "fontSize" : 18
+}

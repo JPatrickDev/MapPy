@@ -18,6 +18,9 @@ class MapPy:
         self.imgData = self.im.load()
         self.width, self.height = self.im.size
 
+        config_data = json.loads(open("config.json").read())
+
+
         self.startRed = 255
         self.startGreen = 0
         self.startBlue = 0
