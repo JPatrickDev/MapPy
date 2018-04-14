@@ -20,19 +20,20 @@ class MapPy:
 
         config_data = json.loads(open("config.json").read())
 
+        startColStr = config_data['startColor'].split(",")
+        self.startRed = int(startColStr[0])
+        self.startGreen = int(startColStr[1])
+        self.startBlue = int(startColStr[2])
 
-        self.startRed = 255
-        self.startGreen = 0
-        self.startBlue = 0
+        endColStr = config_data['endColor'].split(",")
+        self.endRed = int(endColStr[0])
+        self.endGreen = int(endColStr[1])
+        self.endBlue = int(endColStr[2])
 
-        self.endRed = 0
-        self.endGreen = 0
-        self.endBlue = 0
+        self.max = config_data['max'];
 
-        self.max = 20
-
-        self.scaleMin = 4
-        self.scaleMax = 9
+        self.scaleMin = config_data['scaleMin'];
+        self.scaleMax = config_data['scaleMax'];
 
         self.fnt = ImageFont.truetype('font.ttf', 18)
 
@@ -40,8 +41,8 @@ class MapPy:
         self.values = {}
         for x in self.data:
             name = x['name']
-            # value = input("Value for " + name + ": ")
-            value = random.uniform(self.scaleMin, self.scaleMax)
+            value = input("Value for " + name + ": ")
+           # value = random.uniform(self.scaleMin, self.scaleMax)
             self.values[name] = value
         self.steps = {}
         for area in self.data:
