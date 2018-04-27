@@ -9,8 +9,8 @@ from PIL import ImageFont
 class MapPy:
     def __init__(self, file):
         self.file = file
-        self.imageFile = file + ".png"
-        self.metafile = file + ".json"
+        self.imageFile = "maps/" + file + ".png"
+        self.metafile = "maps/" + file + ".json"
         json_data = open(self.metafile).read()
         self.data = json.loads(json_data)
         self.im = Image.open(self.imageFile)
@@ -18,7 +18,7 @@ class MapPy:
         self.imgData = self.im.load()
         self.width, self.height = self.im.size
 
-        config_data = json.loads(open("config.json").read())
+        config_data = json.loads(open("resources/config.json").read())
 
         startColStr = config_data['startColor'].split(",")
         self.startRed = int(startColStr[0])
@@ -35,7 +35,7 @@ class MapPy:
         self.scaleMin = config_data['scaleMin'];
         self.scaleMax = config_data['scaleMax'];
 
-        self.fnt = ImageFont.truetype('font.ttf', 18)
+        self.fnt = ImageFont.truetype('resources/font.ttf', 18)
 
     def run(self):
         self.values = {}
