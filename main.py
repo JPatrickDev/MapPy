@@ -89,7 +89,7 @@ class MapPy:
             self.im.paste(titleArea, (self.width - titleWidth, 0))
         millisEmd = int(round(time.time() * 1000))
         print(str(millisEmd - millis))
-        self.im.show()
+        self.im.save("output.png")
 
     def process(self):
         millis = int(round(time.time() * 1000))
