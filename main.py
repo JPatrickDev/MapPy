@@ -163,4 +163,4 @@ class MapPy:
         return '%02X%02X%02X' % (r, g, b)
 
 
-MapPy("map").run()
+MapPy(input("Enter the map to load:")).run()
