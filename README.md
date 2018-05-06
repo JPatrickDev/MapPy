@@ -5,7 +5,8 @@ A Python library for generating Map Charts
 MapPy depends on [Pillow](https://pillow.readthedocs.io/en/5.1.x/) to run.
 
 ## Currently Supported Maps
-Currently, the only map provided is the map of the UK split up in to the top level regions used for statistics. 
+Currently there are two maps included: A map of the UK and a map of England split in to the statistical regions.
+
 New maps are always welcome, the format is pretty simple. map.json and map.png are an example of how to make your own.
 
 
